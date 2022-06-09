@@ -1,134 +1,22 @@
-// // the central object of each chart
-// // not new [ClassName], but new()(use class' static method in amChart 5)
-// // parameter: an id of the div container we want to put our chart in
-// var root = am5.Root.new("chartdiv");
-// // new() method for all classes except root element will take root instance as the first parameter
-// // object with key-value pairs
-// var chart = root.container.children.push(
-//     am5percent.PieChart.new(
-//         root, {
-//             valueField: "value",
-//             categoryField: "category"
-//         }
-//     )
-// );
-// var series = chart.series.push(
-//     am5percent.PieSeries.new(root, {})
-// );
-// series.data.setAll([{
-//     category: "Research",
-//     value: 30
-//   }, {
-//     category: "Marketing",
-//     value: 40
-//   }, {
-//     category: "Sales",
-//     value: 30
-//   }]);
-
-
-// class MyTheme extends am5.Theme {
-// 	setupDefaultRules() {
-//       this.rule("ColorSet").set("colors", [
-//         am5.color(0x1e73be), /* 블루 */
-//         am5.color(0xe05151), /* 레드 */
-//         am5.color(0xa8a8a8) /* 그레이 */
-//       ]);
-//     }
-// }
-        
-// let root = am5.Root.new("chartdiv");
-
-// root.setThemes([
-// 	am5themes_Animated.new(root), MyTheme.new(root)
-// ]);
-
-// let chart = root.container.children.push(
-//     am5xy.XYChart.new(root, {
-//         panY: false,
-//         wheelY: "zoomX",
-//         layout: root.verticalLayout
-//     })
-// );
-
-// // Define data
-// let data = [
-//     {voteType: "찬성", count: 3},
-//     {voteType: "반대", count: 7},
-//     {voteType: "기권", count: 2}
-// ];
-
-// let xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
-//     maxDeviation: 1,
-//     categoryField: "voteType",
-//     renderer: am5xy.AxisRendererX.new(root, {
-//     	/* 막대그래프의 폭 설정 */
-//         cellStartLocation: 0.2, /* 왼쪽끝에서 0.2만큼 떨어져서 그림 */
-//         cellEndLocation: 0.8 /* 오른쪽끝에서 0.8만큼 떨어져서 그림 */
-//     }),
-//     tooltip: am5.Tooltip.new(root, {})
-// }));
-
-// xAxis.data.setAll(data);
-
-// let yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
-//     numberFormat: "#'표'",
-//     maxPrecision: 0,
-//     renderer: am5xy.AxisRendererY.new(root, {})
-// }));
-
-// let series = chart.series.push(
-//     am5xy.ColumnSeries.new(root, {
-//         name: "Series",
-//         xAxis: xAxis,
-//         yAxis: yAxis,
-//         valueYField: "count",
-//         categoryXField: "voteType",
-//         tooltip: am5.Tooltip.new(root, {})
-//     })
-// );
-
-// series.columns.template.setAll({
-//     templateField: "settings",
-//     tooltipText: "{categoryX}:{valueY}",
-//     cornerRadiusTL: 5,
-//     cornerRadiusTR: 5
-// });
-
-// series.columns.template.adapters.add("fill", (fill, target) => {
-//     return chart.get("colors").getIndex(series.columns.indexOf(target));
-// });
-
-// series.columns.template.adapters.add("stroke", (stroke, target) => {
-//     return chart.get("colors").getIndex(series.columns.indexOf(target));
-// });
-
-// series.data.setAll(data);
-
-// series.appear();
-
-// let legend = chart.children.push(am5.Legend.new(root, {
-//     nameField: "categoryX",
-//     centerX: am5.percent(50),
-//     x: am5.percent(50)
-// }));
-
-// legend.data.setAll(series.dataItems);
-// chart.appear(10, 1);
-
-
 // -----------------chart-----------------------
 
-var homeBtn = document.getElementById('homeBtn');
 var root = am5.Root.new("chartdiv");
+
+var colors = am5.ColorSet.new(root, {});
+
+root.setThemes([
+    am5themes_Animated.new(root)
+]);
+
+
 
 var chart = root.container.children.push(
     am5map.MapChart.new(root, {
         panX: "rotateX",
-        projection: am5map.geoNaturalEarth1()
+        // projection: am5map.geoNaturalEarth1()
+        projection: am5map.geoMercator()
     })
 )
-homeBtn.addEventListener("click", () => chart.goHome());
 chart.set("zoomControl", am5map.ZoomControl.new(root, {}));
 chart.chartContainer.set("background", am5.Rectangle.new(root, {
     fill: am5.color(0xdeeaf4),
@@ -136,26 +24,135 @@ chart.chartContainer.set("background", am5.Rectangle.new(root, {
 }));
 // -------------------polygon-----------------------
 
-var polygonSeries = chart.series.push(
+var worldSeries = chart.series.push(
     am5map.MapPolygonSeries.new(root, {
       geoJSON: am5geodata_worldLow,
       exclude: ["AQ"],
-      fill: am5.color(0xed963f),
+    //   fill: am5.color(0xed963f),
     //   stroke: am5.color(0xffffff)
     })
   );
-polygonSeries.mapPolygons.template.setAll({
+worldSeries.mapPolygons.template.setAll({
+    tooltipText: "{name}",
+    interactive: true,
     stroke: am5.color(0xe3e3e3),
     strokeWidth: 2,
-    fillOpacity: 0.5
+    fillOpacity: 0.5,
+    templateField: "polygonSettings"
   });
-polygonSeries.mapPolygons.template.setAll({
+
+
+worldSeries.mapPolygons.template.states.create("hover", {
+// fill: am5.color(0x034221)
+fill: colors.getIndex(9)
+});
+
+//----------------------country----------------------
+
+var continents = {
+    "AF": 0,
+    "AN": 1,
+    "AS": 2,
+    "EU": 3,
+    "NA": 4,
+    "OC": 5,
+    "SA": 6
+}
+
+worldSeries.mapPolygons.template.events.on("click", (e) => {
+    var dataItem = e.target.dataItem;
+    var data = dataItem.dataContext;
+    var zoomAnimation = worldSeries.zoomToDataItem(dataItem);
+
+    Promise.all([
+        zoomAnimation.waitForStop(),
+        am5.net.load("https://cdn.amcharts.com/lib/5/geodata/json/"+ data.map + ".json", chart)
+    ]).then((results) => {
+        var geodata = am5.JSONParser.parse(results[1].response);
+        countrySeries.setAll({
+            geoJSON: geodata,
+            fill: data.polygonSettings.fill
+        });
+        countrySeries.show()
+        worldSeries.hide(100);
+        backContainer.show();
+    });
+});
+
+var countrySeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
+    visible: false
+}));
+
+countrySeries.mapPolygons.template.setAll({
     tooltipText: "{name}",
-    interactive: true
+    interactive: true,
+    fill: am5.color(0xaaaaaa)
 });
 
-polygonSeries.mapPolygons.template.states.create("hover", {
-fill: am5.color(0x034221)
+countrySeries.mapPolygons.template.states.create("hover", {
+    fill: colors.getIndex(9)
 });
 
+var data = [];
+for (var id in am5geodata_data_countries2) {
+    if (am5geodata_data_countries2.hasOwnProperty(id)) {
+        var country = am5geodata_data_countries2[id];
+        if (country.maps.length) {
+            data.push({
+                id: id,
+                map: country.maps[0],
+                polygonSettings: {
+                    fill: colors.getIndex(continents[country.continent_code]),
+                }
+            });
+        }
+    }
+}
 
+worldSeries.data.setAll(data);
+
+// back to continents view button
+var backContainer = chart.children.push(am5.Container.new(root, {
+    x: am5.p100,
+    centerX: am5.p100,
+    dx: -10,
+    paddingTop: 5,
+    paddingRight: 10,
+    paddingBottom: 5,
+    y: 30,
+    interactiveChildren: false,
+    layout: root.horizontalLayout,
+    cursorOverStyle: "pointer",
+    background: am5.RoundedRectangle.new(root, {
+        fill: am5.color(0xffffff),
+        fillOpacity: 0.2
+    }),
+    visible: false
+}));
+
+// var backLabel = backContainer.children.push(am5.Label.new(root, {
+//     text: "world map",
+//     centerY: am5.p50
+// }));
+
+var backButton = backContainer.children.push(am5.Graphics.new(root, {
+    width: 32,
+    height: 32,
+    centerY: am5.p50,
+    fillGradient: am5.LinearGradient.new(root, {
+        stops: [{
+          color: am5.color(0x654ea3)
+        }, {
+          color: am5.color(0xeaafc8)
+        }],
+        rotation: 0
+    }),
+    svgPath: "M44 40.8361C39.1069 34.8632 34.7617 31.4739 30.9644 30.6682C27.1671 29.8625 23.5517 29.7408 20.1182 30.303V41L4 23.5453L20.1182 7V17.167C26.4667 17.2172 31.8638 19.4948 36.3095 24C40.7553 28.5052 43.3187 34.1172 44 40.8361Z"
+}));
+
+backContainer.events.on("click", function() {
+    chart.goHome();
+    worldSeries.show();
+    countrySeries.hide();
+    backContainer.hide();
+});
