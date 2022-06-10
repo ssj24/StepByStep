@@ -5,16 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorldMap</title>
-    <style>
-        .chart {
-            width: 100%;
-            height: 500px;
-            /* background-color: #ed963f; */
-        }
-    </style>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-<script type="module" src="script.js"></script>
+<script type="module" src="index.js"></script>
 <script src="https://cdn.amcharts.com/lib/version/5.2.7/index.js"></script>
 <script src="https://cdn.amcharts.com/lib/version/5.2.7/xy.js"></script>
 <script src="https://cdn.amcharts.com/lib/version/5.2.7/themes/Animated.js"></script>
@@ -27,6 +21,25 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-geo-projection@4"></script> -->
 <script src="https://cdn.amcharts.com/lib/5/geodata/data/countries.js"></script>
 <script src="https://cdn.amcharts.com/lib/5/geodata/data/countries2.js"></script>
+<div class="container">
     <div id="chartdiv" class="chart"></div>
+</div>    
+<div class="overlay hidden">
+    <div class="overlayContainer">
+        <header>
+            <div class="subject">여행기</div>
+            <div class="date">날짜</div>
+            <p class="country">나라</p>
+            <p class="city">도시</p>
+        </header>
+        <section class="main">
+            <textarea id="journalMain"></textarea>
+        </section>
+        <footer>
+            <button class="btn submit">작성</button>
+            <button class="btn cancel">취소</button>
+        </footer>
+    </div>
+</div>
 </body>
 </html>

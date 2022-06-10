@@ -1,0 +1,136 @@
+@font-face {
+    font-family: 'Cafe24SsurroundAir';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24SsurroundAir.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'yleeMortalHeartImmortalMemory';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2205@1.0/yleeMortalHeartImmortalMemory.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+:root {
+    --primary: #f0faf8;
+    --gray: #9f9f9f;
+    --dark_ocean:#1a6070;
+    --ocean:#76b6c4;
+    --desaturated_ocean: #c6e4eb;
+    --pale_ocean:#d6e9f7b0;
+    --self_care: #daf15b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+    border-radius: 20px;
+}
+
+html {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cafe24SsurroundAir', sans-serif;
+    font-size: 18px;
+    background-color: var(--primary);
+}
+
+ul {
+    list-style: none;
+}
+
+.container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: auto;
+    width: 1100px;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chart {
+    width: 90%;
+    height: 90%;
+    margin: auto;
+    /* background-color: #ed963f; */
+}
+
+
+/* -----------------------overlay------------------ */
+
+.overlay {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.5);
+    position: relative; 
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.overlayContainer {
+    width: 600px;
+    height: 600px;
+    padding: 30px;
+    border: thick double var(--dark_ocean);
+    background-color: var(--primary);
+}
+.overlayContainer header {
+    margin: 10px 0 30px 0;
+}
+.overlayContainer header div {
+    margin-bottom: 10px;
+    display: inline-block;
+}
+.subject {
+    width: 30%;
+    text-align: center;
+}
+.date {
+    width: 60%;
+    text-align: center;
+}
+.overlayContainer header p {
+    display: inline-block;
+}
+.country {
+    text-shadow: 0 0 1px black;
+    width: 30%;
+    text-align: center;
+}
+.overlayContainer .main {
+    width: 540px;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.overlayContainer .main textarea {
+    font-size: 1rem;
+    width: 90%;
+    height: 100%;
+    padding: 10px;
+}
+.overlayContainer footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+}
+.btn {
+    padding: 10px 20px;
+    margin: 10px;
+}
+.hidden {
+    display: none;
+}
