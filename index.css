@@ -103,11 +103,12 @@ ul {
 }
 .overlayContainer header p {
     display: inline-block;
+    text-align: center;
 }
 .country {
     text-shadow: 0 0 1px black;
     width: 30%;
-    text-align: center;
+    /* text-align: center; */
 }
 .overlayContainer .main {
     width: 540px;

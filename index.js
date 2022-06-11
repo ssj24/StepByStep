@@ -37,7 +37,7 @@ var worldSeries = chart.series.push(
 worldSeries.mapPolygons.template.setAll({
     tooltipText: "{name}",
     interactive: true,
-    stroke: am5.color(0xc6e4eb),
+    stroke: am5.color(0x1a6070),
     strokeWidth: 2,
     fillOpacity: 0.7,
     templateField: "polygonSettings"
@@ -45,7 +45,8 @@ worldSeries.mapPolygons.template.setAll({
 
 
 worldSeries.mapPolygons.template.states.create("hover", {
-    fill: am5.color(0x034221)
+    // fill: am5.color(0x034221)
+    fill: colors.getIndex(9)
 });
 
 //----------------------country----------------------
@@ -87,7 +88,7 @@ var countrySeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
 countrySeries.mapPolygons.template.setAll({
     tooltipText: "{name}",
     interactive: true,
-    stroke: am5.color(0xc6e4eb),
+    stroke: am5.color(0x1a6070),
     strokeWidth: 2
 });
 
@@ -106,6 +107,8 @@ for (var id in am5geodata_data_countries2) {
                 map: country.maps[0],
                 polygonSettings: {
                     fill: colors.getIndex(continents[country.continent_code]),
+                    // fill: am5.color(0xf0faf8)
+                    fillOpacity: 0.3
                 }
             });
         }
@@ -127,34 +130,33 @@ var backContainer = chart.children.push(am5.Container.new(root, {
     interactiveChildren: false,
     layout: root.horizontalLayout,
     cursorOverStyle: "pointer",
-    background: am5.RoundedRectangle.new(root, {
-        fill: am5.color(0xffffff),
-        fillOpacity: 0,
-        // stroke: am5.color(0xffffff)
-    }),
     visible: false
 }));
 
-// var backLabel = backContainer.children.push(am5.Label.new(root, {
-//     text: "world map",
-//     centerY: am5.p50
+// var backButton = backContainer.children.push(am5.Graphics.new(root, {
+//     width: 32,
+//     height: 32,
+//     centerY: am5.p50,
+//     fillGradient: am5.LinearGradient.new(root, {
+//         stops: [{
+//           color: am5.color(0x654ea3)
+//         }, {
+//           color: am5.color(0xeaafc8)
+//         }],
+//         rotation: 0
+//     }),
+//     stroke: am5.color(0xc6e4eb),
+//     svgPath: "M44 40.8361C39.1069 34.8632 34.7617 31.4739 30.9644 30.6682C27.1671 29.8625 23.5517 29.7408 20.1182 30.303V41L4 23.5453L20.1182 7V17.167C26.4667 17.2172 31.8638 19.4948 36.3095 24C40.7553 28.5052 43.3187 34.1172 44 40.8361Z"
 // }));
-
-var backButton = backContainer.children.push(am5.Graphics.new(root, {
-    width: 32,
-    height: 32,
-    centerY: am5.p50,
-    fillGradient: am5.LinearGradient.new(root, {
-        stops: [{
-          color: am5.color(0x654ea3)
-        }, {
-          color: am5.color(0xeaafc8)
-        }],
-        rotation: 0
-    }),
-    stroke: am5.color(0xc6e4eb),
-    svgPath: "M44 40.8361C39.1069 34.8632 34.7617 31.4739 30.9644 30.6682C27.1671 29.8625 23.5517 29.7408 20.1182 30.303V41L4 23.5453L20.1182 7V17.167C26.4667 17.2172 31.8638 19.4948 36.3095 24C40.7553 28.5052 43.3187 34.1172 44 40.8361Z"
-}));
+var backButton = backContainer.children.push(
+    am5.Picture.new(root, {
+        width: 50,
+        height: 50,
+        centerY: am5.p50,
+        src: "world-map.png"
+    })
+)
+backButton.set("tooltipText", "world view");
 
 backContainer.events.on("click", function() {
     chart.goHome();
@@ -208,18 +210,50 @@ function closeOverlay(e) {
     };
 }
 
+function addPin(id, name) {
+    var pointSeries = chart.series.push(
+        am5map.MapPointSeries.new(root, {
+            polygonIdField: "Territory"
+        })
+    );
+    pointSeries.data.setAll([{
+        Territory: id,
+        name: name
+    }])
+
+    pointSeries.bullets.push(function() {
+        return am5.Bullet.new(root, {
+            sprite: am5.Picture.new(root, {
+                dx: -10,
+                dy: -10,
+                width: 20,
+                height: 20,
+                src: "pin.png"
+            })
+        })
+    })
+}
+
 countrySeries.mapPolygons.template.events.on("click", (e) => {
     let dataItem = e.target.dataItem;
     let data = dataItem.dataContext;
     console.log(data);
+    let countryName = data.CNTRY || data.CNTRYNAME;
+    let cityName = data.name;
+
+    // overlay - country, city
     let country = document.querySelector(".country");
     let city = document.querySelector(".city");
-    country.textContent = data.CNTRY || data.CNTRYNAME;
-    city.textContent = data.name;
-    journaldata.cntry = data.CNTRY || data.CNTRYNAME;
-    journaldata.city = data.name;
+    country.textContent = countryName;
+    city.textContent = cityName;
+    journaldata.cntry = countryName;
+    journaldata.city = cityName;
     overlay.show();
     mainOverlay.classList.remove("hidden");
+
+    addPin(data.id, cityName);
+
+    // button click event
     var submitBtn = document.querySelector(".submit");
     var cancelBtn = document.querySelector(".cancel");
     submitBtn.addEventListener("click", function() {
