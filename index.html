@@ -21,16 +21,42 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-geo-projection@4"></script> -->
 <script src="https://cdn.amcharts.com/lib/5/geodata/data/countries.js"></script>
 <script src="https://cdn.amcharts.com/lib/5/geodata/data/countries2.js"></script>
-<div class="container">
+<section class="container">
     <div id="chartdiv" class="chart"></div>
-</div>    
+</section>
+<section class="midSec">
+    <div class="subjectCat">
+        <span>
+            <p>여행기</p>
+            <button class="addSub">더하기</button>
+        </span>
+        <div class="subInput hidden">
+            <input type="text">
+            <button>+</button>
+        </div>
+        <ul class="subjectList">
+            <li data-sub="all">전체</li>
+        </ul>
+    </div>
+    <div class="journals" id="journals">
+        <div class="journalContainer">
+            <div class="subject">subject</div>
+            <div class="date">date</div>
+            <p class="country">country</p>
+            <p class="city">city</p>
+            <section class="main">
+                <p class="journalText">journal</p>
+            </section>
+        </div>
+    </div>
+</section>
 <div class="overlay hidden">
     <div class="overlayContainer">
         <header>
-            <div class="subject">여행기</div>
-            <div class="date">날짜</div>
-            <p class="country">나라</p>
-            <p class="city">도시</p>
+            <div class="subject" id="subject">여행기</div>
+            <div class="date" id="date">날짜</div>
+            <p class="country" id="country">나라</p>
+            <p class="city" id="city">도시</p>
         </header>
         <section class="main">
             <textarea id="journalMain"></textarea>

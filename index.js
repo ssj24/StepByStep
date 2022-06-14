@@ -1,4 +1,6 @@
 var mainOverlay = document.querySelector(".overlay");
+var subjects = document.querySelector(".subjectList").children;
+var subAddBtn = document.querySelector(".addSub");
 
 // -----------------chart-----------------------
 
@@ -38,6 +40,7 @@ worldSeries.mapPolygons.template.setAll({
     tooltipText: "{name}",
     interactive: true,
     stroke: am5.color(0x1a6070),
+    strokeOpacity: 0.3,
     strokeWidth: 2,
     fillOpacity: 0.7,
     templateField: "polygonSettings"
@@ -73,7 +76,7 @@ worldSeries.mapPolygons.template.events.on("click", (e) => {
         var geodata = am5.JSONParser.parse(results[1].response);
         countrySeries.setAll({
             geoJSON: geodata,
-            fill: data.polygonSettings.fill
+            fill: data.polygonSettings.fill,
         });
         countrySeries.show()
         worldSeries.hide(100);
@@ -88,7 +91,8 @@ var countrySeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
 countrySeries.mapPolygons.template.setAll({
     tooltipText: "{name}",
     interactive: true,
-    stroke: am5.color(0x1a6070),
+    stroke: am5.color(0xf0faf8),
+    strokeOpacity: 0.5,
     strokeWidth: 2
 });
 
@@ -165,7 +169,24 @@ backContainer.events.on("click", function() {
     backContainer.hide();
 });
 
+// ----------------------- subject -----------------
+
+function addSubject() {
+    
+}
+
+subAddBtn.addEventListener("click", addSubject);
+for (let i=0; i<subjects.length; i++) {
+    console.log(subjects[i].dataset.sub);
+}
+
 // ----------------------journal--------------------------
+let journalList = [];
+
+function loadJournal() {
+    let journals = document.querySelector(".journals");
+    journals.textContent = '';
+}
 
 var overlay = root.container.children.push(am5.Container.new(root, {
     background: am5.Rectangle.new(root, {
@@ -177,16 +198,6 @@ var overlay = root.container.children.push(am5.Container.new(root, {
     layer: 100,
     visible: false
 }));
-var journaldata = {
-    subject: 'test',
-    dateY: 2022,
-    dateM: 6,
-    dateD: 10,
-    cntry: 'test',
-    city: 'test',
-    text: 'test'
-};
-
 
 var editor = overlay.children.push(am5.Container.new(root, {
     width: am5.p90,
@@ -196,18 +207,10 @@ var editor = overlay.children.push(am5.Container.new(root, {
     layout: root.gridLayout,
 }))
 
-function closeOverlay(e) {
+function closeOverlay() {
     overlay.hide();
     mainOverlay.classList.add("hidden");
-    journaldata = {
-        subject: 'test',
-        dateY: 2022,
-        dateM: 6,
-        dateD: 10,
-        cntry: 'test',
-        city: 'test',
-        text: 'test'
-    };
+    document.getElementById("journalMain").value = '';
 }
 
 function addPin(id, name) {
@@ -234,40 +237,70 @@ function addPin(id, name) {
     })
 }
 
+function addJournal() {
+    let data = journalList[journalList.length-1];
+    let newJournal = document.createElement('div');
+    newJournal.classList.add('journalContainer');
+    newJournal.innerHTML = `
+        <div class="subject">${data.subject}</div>
+        <div class="date">${data.dateY}-${data.dateM}-${data.dateD}</div>
+        <p class="country">${data.cntry}</p>
+        <p class="city">${data.city}</p>
+        <section class="main">
+            <p class="journalText">${data.text}</p>
+        </section>`;
+    journals.prepend(newJournal);
+    addPin(data.id, data.city);
+    closeOverlay();
+}
+
+
 countrySeries.mapPolygons.template.events.on("click", (e) => {
     let dataItem = e.target.dataItem;
     let data = dataItem.dataContext;
-    console.log(data);
-    let countryName = data.CNTRY || data.CNTRYNAME;
-    let cityName = data.name;
+    let today = new Date();
+    let journalData = {
+        subject: 'test',
+        id: data.id,
+        dateY: today.getFullYear(),
+        dateM: today.getMonth() + 1,
+        dateD: today.getDate(),
+        cntry: data.CNTRY || data.CNTRYNAME || data.CNTRY_NAME,
+        city: data.name,
+        text: 'test'
+    };
+    journalList.push(journalData);
 
     // overlay - country, city
-    let country = document.querySelector(".country");
-    let city = document.querySelector(".city");
-    country.textContent = countryName;
-    city.textContent = cityName;
-    journaldata.cntry = countryName;
-    journaldata.city = cityName;
+    let country = document.getElementById("country");
+    let city = document.getElementById("city");
+    country.textContent = journalData.cntry;
+    city.textContent = journalData.city;
     overlay.show();
     mainOverlay.classList.remove("hidden");
-
-    addPin(data.id, cityName);
-
-    // button click event
-    var submitBtn = document.querySelector(".submit");
-    var cancelBtn = document.querySelector(".cancel");
-    submitBtn.addEventListener("click", function() {
-        let inputText = document.getElementById("journalMain").value;
-        journaldata.text = inputText;
-        console.log(journaldata);
-    })
-    cancelBtn.addEventListener("click", e => {closeOverlay(e)})
 })
 
-mainOverlay.addEventListener("click", e => {
-    if (e.target.classList.contains("overlay")) closeOverlay(e);
+// button click event
+let submitBtn = document.querySelector(".submit");
+let cancelBtn = document.querySelector(".cancel");
+submitBtn.addEventListener("click", function() {
+    let inputText = document.getElementById("journalMain").value;
+    journalList[journalList.length - 1].text = inputText;
+    addJournal();
+})
+cancelBtn.addEventListener("click", () => {
+    journalList.pop();
+    closeOverlay();
 });
 
+mainOverlay.addEventListener("click", e => {
+    if (e.target.classList.contains("overlay")) {
+        journalList.pop()
+        closeOverlay();
+    }
+});
+
+loadJournal();
 
 
 

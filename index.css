@@ -47,14 +47,11 @@ ul {
 }
 
 .container {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
     margin: auto;
     width: 1100px;
     height: 600px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -66,6 +63,68 @@ ul {
     /* background-color: #ed963f; */
 }
 
+/* ---------------- subject category -------------- */
+
+.midSec {
+    padding: 30px;
+    width: 90%;
+    display: flex;
+    margin: auto;
+}
+
+.subjectCat {
+    width: 30%;
+    margin: 30px;
+}
+
+.subjectCat span {
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0;
+    border-bottom: 1px dashed red;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.subjectCat p {
+}
+
+.addSub {
+    padding: 10px 20px;
+}
+
+.subjectList {
+    
+}
+
+/* -----------------journal lists------------------ */
+
+.journals {
+    border: 1px solid red;
+    width: 70%;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.journalContainer {
+    margin: 0 20px 10px 20px;
+    padding: 20px;
+    box-shadow: 5px 5px 3px 0px var(--dark_ocean);
+    max-height: 250px;
+}
+
+.journalContainer .journalText {
+    border-radius: 0;
+    border-top: 3px dotted gray;
+    padding: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
 
 /* -----------------------overlay------------------ */
 
@@ -73,7 +132,9 @@ ul {
     width: 100vw;
     height: 100vh;
     background-color: rgba(255, 255, 255, 0.5);
-    position: relative; 
+    position: fixed;
+    top: 0;
+    left: 0;
     z-index: 1000;
     display: flex;
     justify-content: center;
@@ -87,28 +148,30 @@ ul {
     background-color: var(--primary);
 }
 .overlayContainer header {
-    margin: 10px 0 30px 0;
+    margin: 10px 0;
 }
-.overlayContainer header div {
-    margin-bottom: 10px;
-    display: inline-block;
-}
+
 .subject {
+    display: inline-block;
     width: 30%;
     text-align: center;
 }
 .date {
+    display: inline-block;
     width: 60%;
     text-align: center;
-}
-.overlayContainer header p {
-    display: inline-block;
-    text-align: center;
+    margin-bottom: 10px;
 }
 .country {
     text-shadow: 0 0 1px black;
+    display: inline-block;
     width: 30%;
-    /* text-align: center; */
+    text-align: center;
+}
+.city {
+    display: inline-block;
+    text-align: center;
+    margin-bottom: 10px;
 }
 .overlayContainer .main {
     width: 540px;
