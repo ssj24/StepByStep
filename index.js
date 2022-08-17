@@ -1,6 +1,4 @@
-var mainOverlay = document.querySelector(".overlay");
-var subjects = document.querySelector(".subjectList").children;
-var subAddBtn = document.querySelector(".addSub");
+
 
 // -----------------chart-----------------------
 
@@ -157,10 +155,12 @@ var backButton = backContainer.children.push(
         width: 50,
         height: 50,
         centerY: am5.p50,
-        src: "world-map.png"
+        tooltipX: am5.percent(70),
+        tooltipY: am5.percent(10),
+        src: "back.png"
     })
 )
-backButton.set("tooltipText", "world view");
+backButton.set("tooltipText", "세계지도 보기");
 
 backContainer.events.on("click", function() {
     chart.goHome();
@@ -171,16 +171,49 @@ backContainer.events.on("click", function() {
 
 // ----------------------- subject -----------------
 
+const categoryOverlay = document.querySelector(".categoryOverlay");
+let subjects = document.querySelector(".subjectList");
+const subAddBtn = document.querySelector(".addSub");
+
 function addSubject() {
-    
+    categoryOverlay.classList.remove("hidden");
 }
 
 subAddBtn.addEventListener("click", addSubject);
-for (let i=0; i<subjects.length; i++) {
-    console.log(subjects[i].dataset.sub);
-}
+
+// button click event
+const categoryInput = categoryOverlay.querySelector(".categoryInput");
+const addBtn = categoryOverlay.querySelector(".add");
+const catCancelBtn = categoryOverlay.querySelector(".cancel");
+addBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    let newCat = document.createElement("li");
+    let newP = document.createElement("p");
+    let newSpan = document.createElement("span");
+    newP.textContent = categoryInput.value;
+    newSpan.textContent = "delete";
+    newCat.appendChild(newP);
+    newCat.appendChild(newSpan);
+    subjects.appendChild(newCat);
+    closeOverlay(categoryOverlay);
+});
+catCancelBtn.addEventListener("click", () => {
+    closeOverlay(categoryOverlay);
+
+});
+
+categoryOverlay.addEventListener("click", e => {
+    if (e.target.classList.contains("overlay")) {
+        closeOverlay(e.target)
+    }
+})
+
+// value verification(existance or minimum character?)
+
 
 // ----------------------journal--------------------------
+const mainOverlay = document.querySelector(".journalOverlay");
+
 let journalList = [];
 
 function loadJournal() {
@@ -206,12 +239,6 @@ var editor = overlay.children.push(am5.Container.new(root, {
     fill: am5.color(0xffff00),
     layout: root.gridLayout,
 }))
-
-function closeOverlay() {
-    overlay.hide();
-    mainOverlay.classList.add("hidden");
-    document.getElementById("journalMain").value = '';
-}
 
 function addPin(id, name) {
     var pointSeries = chart.series.push(
@@ -281,8 +308,8 @@ countrySeries.mapPolygons.template.events.on("click", (e) => {
 })
 
 // button click event
-let submitBtn = document.querySelector(".submit");
-let cancelBtn = document.querySelector(".cancel");
+const submitBtn = mainOverlay.querySelector(".submit");
+const cancelBtn = mainOverlay.querySelector(".cancel");
 submitBtn.addEventListener("click", function() {
     let inputText = document.getElementById("journalMain").value;
     journalList[journalList.length - 1].text = inputText;
@@ -290,17 +317,26 @@ submitBtn.addEventListener("click", function() {
 })
 cancelBtn.addEventListener("click", () => {
     journalList.pop();
-    closeOverlay();
+    closeOverlay(mainOverlay);
 });
 
 mainOverlay.addEventListener("click", e => {
     if (e.target.classList.contains("overlay")) {
         journalList.pop()
-        closeOverlay();
+        closeOverlay(e.target);
     }
 });
 
+
 loadJournal();
+function closeOverlay(target) {
+    target.classList.add("hidden");
+    console.log(target.classList);
+    if (target.classList[0] == "journalOverlay") {
+        overlay.hide();
+        document.getElementById("journalMain").value = '';
+    };
+}
 
 
 

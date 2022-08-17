@@ -35,7 +35,10 @@
             <button>+</button>
         </div>
         <ul class="subjectList">
-            <li data-sub="all">전체</li>
+            <li data-sub="all">
+                <p>전체</p>
+                <span>delete</span>
+            </li>
         </ul>
     </div>
     <div class="journals" id="journals">
@@ -50,10 +53,18 @@
         </div>
     </div>
 </section>
-<div class="overlay hidden">
+<div class="journalOverlay overlay hidden">
     <div class="overlayContainer">
         <header>
-            <div class="subject" id="subject">여행기</div>
+            <div class="subject" id="subject">
+                여행기
+                <select name="category" id="category">
+                    <option value="test1" selected>test1</option>
+                    <option value="test2">test2</option>
+                    <option value="test3">test3</option>
+                    <option value="test4">test4</option>
+                </select>
+            </div>
             <div class="date" id="date">날짜</div>
             <p class="country" id="country">나라</p>
             <p class="city" id="city">도시</p>
@@ -63,6 +74,20 @@
         </section>
         <footer>
             <button class="btn submit">작성</button>
+            <button class="btn cancel">취소</button>
+        </footer>
+    </div>
+</div>
+<div class="categoryOverlay overlay hidden">
+    <div class="overlayContainer">
+        <header>
+            <h1>새로운 여행기 추가하기</h1>
+        </header>
+        <section class="main">
+            <input type="text" name="" class="categoryInput" placeholder="여행기 이름을 입력해주세요">
+        </section>
+        <footer>
+            <button class="btn add">추가</button>
             <button class="btn cancel">취소</button>
         </footer>
     </div>

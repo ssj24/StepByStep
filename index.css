@@ -111,6 +111,7 @@ ul {
 .journalContainer {
     margin: 0 20px 10px 20px;
     padding: 20px;
+    background-color: var(--pale_ocean);
     box-shadow: 5px 5px 3px 0px var(--dark_ocean);
     max-height: 250px;
 }
@@ -146,6 +147,9 @@ ul {
     padding: 30px;
     border: thick double var(--dark_ocean);
     background-color: var(--primary);
+}
+.categoryOverlay .overlayContainer {
+    height: 300px;
 }
 .overlayContainer header {
     margin: 10px 0;
@@ -184,12 +188,27 @@ ul {
     font-size: 1rem;
     width: 90%;
     height: 100%;
-    padding: 10px;
+    padding: 20px;
+}
+.overlayContainer .main input:focus {
+    outline: none;
+}
+.categoryOverlay .overlayContainer .main {
+    height: 100px;
+}
+.categoryOverlay .overlayContainer .main input {
+    font-size: 1rem;
+    width: 90%;
+    height: 50px;
+    padding: 20px;
 }
 .overlayContainer footer {
     display: flex;
     justify-content: center;
-    padding-top: 20px;
+    padding-top: 30px;
+}
+.categoryOverlay .overlayContainer footer {
+    padding-top: 10px;
 }
 .btn {
     padding: 10px 20px;
